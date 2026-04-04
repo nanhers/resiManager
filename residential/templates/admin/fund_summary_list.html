@@ -1,0 +1,89 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+{% load humanize %}
+
+<div id="content-main">
+
+    <h1>Resumen de Aportes</h1>
+
+    <!-- 🔹 FILTROS -->
+    <div class="module aligned">
+        <form method="get">
+
+            <div class="form-row">
+                <div>
+                    <label>Condominio:</label>
+                    <select name="condominium" class="vForeignKeyRawIdAdminField" onchange="this.form.submit()">
+                        <option value="">Seleccione...</option>
+                        {% for c in condominiums %}
+                            <option value="{{ c.id }}" {% if c.id|stringformat:"s" == selected_condo %}selected{% endif %}>
+                                {{ c.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label>Fondo:</label>
+                    <select name="fund" class="vForeignKeyRawIdAdminField" onchange="this.form.submit()">
+                        <option value="">Seleccione...</option>
+                        {% for f in funds %}
+                            <option value="{{ f.id }}" {% if f.id|stringformat:"s" == selected_fund %}selected{% endif %}>
+                                {{ f.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if selected_fund %}
+						<a href="{% url 'fund_report_pdf' %}?fund={{ selected_fund }}" 
+						class="button" 
+						style="margin-top:10px; display:inline-block;">
+							📄 Descargar PDF
+						</a>
+					{% endif %}
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- 🔹 RESULTADO -->
+    {% if summary %}
+    <div class="module">
+        <h2>Resultado</h2>
+
+        <table class="adminlist" style="width:100%; table-layout: fixed;">
+            <thead>
+				<tr>
+					<th style="width:20%;">Residencia</th>
+					<th style="width:50%;">Propietario</th>
+					<th style="width:30%; text-align:right;">Total</th>
+				</tr>
+			</thead>
+            <tbody>
+				{% for row in summary %}
+				<tr>
+					<td>{{ row.residence__identifier }}</td>
+					<td>{{ row.residence__owner_name }}</td>
+					<td style="text-align:right;">
+						<strong>$ {{ row.total|floatformat:2|intcomma }}</strong>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+            <tr style="font-weight:bold; border-top:2px solid #ddd;">
+				<td colspan="2" style="text-align:right;">
+					Total General:
+				</td>
+				<td style="text-align:right;">
+					$ {{ total_general|floatformat:2|intcomma }}
+				</td>
+			</tr>
+        </table>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

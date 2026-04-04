@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .info {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        td.amount {
+            text-align: right;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background-color: #f9f9f9;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 10px;
+            text-align: right;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="header">
+        <div class="title">Resumen de Aportes</div>
+        <div class="subtitle">{{ fund.name }}</div>
+        <div class="subtitle">Condominio {{ condominium.name }}</div>
+    </div>
+
+
+
+    <table>
+        <thead>
+            <tr>
+                <th>Residencia</th>
+                <th>Propietario</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in summary %}
+            <tr>
+                <td>{{ row.residence__identifier }}</td>
+                <td>{{ row.residence__owner_name }}</td>
+                <td class="amount">$ {{ row.total }}</td>
+            </tr>
+            {% endfor %}
+
+            <tr class="total-row">
+                <td colspan="2">Total General</td>
+                <td class="amount">$ {{ total_general }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <div class="footer">
+        Generado automáticamente por el sistema • {{ generated_at }}
+    </div>
+
+</body>
+<div style="
+    margin-top:30px;
+    padding:15px;
+    border:1px solid #e0e0e0;
+    border-radius:8px;
+    background-color:#fafafa;
+    text-align:center;
+">
+
+    <p style="font-size:13px; font-weight:bold; margin-bottom:5px;">
+        Este espacio puede ser tuyo
+    </p>
+
+    <p style="font-size:12px; margin:5px 0;">
+        Anuncia tu negocio directamente a residentes del condominio
+    </p>
+
+    <p style="font-size:12px; margin:8px 0;">
+        📞 932 242 3505 &nbsp; | &nbsp; ✉️ nanhe2005@gmail.com
+    </p>
+
+    <p style="font-size:10px; color:#777; margin-top:8px;">
+        Llega cada mes a personas que realmente necesitan tus servicios
+    </p>
+
+</div>
+</html>
