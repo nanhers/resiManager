@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from smart_selects.db_fields import ChainedForeignKey
+
 
 class Condominium(models.Model):
     name = models.CharField("Nombre",max_length=255)
@@ -53,7 +53,7 @@ class Fund(models.Model):
     
 class Payment(models.Model):
     fund = models.ForeignKey(Fund, on_delete=models.CASCADE, related_name='payments', verbose_name="Fondo")
-    residence = ChainedForeignKey(Residence, chained_field="fund", chained_model_field="condominium", show_all=False, auto_choose=True, sort=True, verbose_name="Residencia", on_delete=models.CASCADE)
+    residence = models.ForeignKey(Residence, on_delete=models.CASCADE)
     amount = models.DecimalField("Monto", max_digits=10, decimal_places=2)
     payment_date = models.DateTimeField("Fecha de Pago", auto_now_add=True)
     note = models.TextField("Nota", blank=True, null=True)

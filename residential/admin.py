@@ -67,12 +67,8 @@ class FundAdmin(admin.ModelAdmin):
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('get_residence', 'fund', 'amount', 'payment_date')
-
-    def get_residence(self, obj):
-        return obj.residence
-    
-    get_residence.short_description = 'Residencia'
+    class Media:
+        js = ('js/payment_filter.js',)
 
 
 @admin.register(FundSummaryProxy)

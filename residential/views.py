@@ -1,9 +1,10 @@
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from xhtml2pdf import pisa  # 👈 AQUÍ
-from .models import Fund
+from .models import Fund,Residence
 from .services.fund_service import get_fund_summary
 from datetime import datetime
+from django.http import JsonResponse
 
 
 def download_fund_pdf(request):
@@ -31,3 +32,20 @@ def download_fund_pdf(request):
     pisa.CreatePDF(html, dest=response) 
 
     return response
+
+def get_residences_by_fund(request):
+    fund_id = request.GET.get('fund_id')
+    
+    try:
+        fund = Fund.objects.get(id=fund_id)
+        residences = Residence.objects.filter(condominium=fund.condominium)
+        
+        data = [
+            {"id": r.id, "name": str(r)}
+            for r in residences
+        ]
+        
+        return JsonResponse(data, safe=False)
+    except Fund.DoesNotExist:
+        return JsonResponse([], safe=False)
+

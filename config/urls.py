@@ -17,9 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from residential.views import download_fund_pdf
+from django.urls import path
+from residential.views import get_residences_by_fund
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('chaining/', include('smart_selects.urls')),
     path('fund-report-pdf/', download_fund_pdf, name='fund_report_pdf'),
+    path('get-residences/', get_residences_by_fund, name='get_residences'),
 ]
