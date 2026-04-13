@@ -67,8 +67,26 @@ class FundAdmin(admin.ModelAdmin):
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('get_identifier', 'get_owner', 'amount', 'get_condominium')
+
+    list_filter = ('fund__condominium',)
+
+    search_fields = ('residence__owner_name', 'residence__identifier')
+
     class Media:
         js = ('js/payment_filter.js',)
+
+    def get_identifier(self, obj):
+        return obj.residence.identifier
+    get_identifier.short_description = 'Identificador'
+
+    def get_owner(self, obj):
+        return obj.residence.owner_name
+    get_owner.short_description = 'Propietario'
+
+    def get_condominium(self, obj):
+        return obj.fund.condominium.name
+    get_condominium.short_description = 'Condominio'
 
 
 @admin.register(FundSummaryProxy)
