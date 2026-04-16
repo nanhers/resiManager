@@ -1,12 +1,14 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.core.validators import MinLengthValidator
 
 
 class Condominium(models.Model):
-    name = models.CharField("Nombre",max_length=255)
-    address = models.CharField("Dirección",max_length=255)
-    city = models.CharField("Ciudad",max_length=100, blank=True, null=True)
+    name = models.CharField("Nombre",max_length=50, validators=[MinLengthValidator(3)])
+    country = models.CharField("País",max_length=50, validators=[MinLengthValidator(3)]) 
+    city = models.CharField("Ciudad",max_length=100, validators=[MinLengthValidator(3)]) 
     state = models.CharField("Estado",max_length=100, blank=True, null=True)
+    address = models.CharField("Dirección",max_length=250, validators=[MinLengthValidator(5)])
     zip_code = models.CharField("Código Postal",max_length=20, blank=True, null=True)
 
     class Meta:

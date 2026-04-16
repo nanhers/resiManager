@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-from xhtml2pdf import pisa  # 👈 AQUÍ
+from xhtml2pdf import pisa 
 from .models import Fund,Residence
 from .services.fund_service import get_fund_summary
 from datetime import datetime
