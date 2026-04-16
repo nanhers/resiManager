@@ -30,7 +30,7 @@ class ResidenceAdmin(admin.ModelAdmin):
 
     def get_condominium(self, obj):
         return obj.condominium.name
-    
+
     get_condominium.short_description = 'Condominio'
 
 @admin.register(Fund)
@@ -39,16 +39,16 @@ class FundAdmin(admin.ModelAdmin):
     list_filter = ('condominium', 'is_active')
     search_fields = ('name', 'description')
 
-    readonly_fields = ('payment_summary',)  
+    readonly_fields = ('payment_summary',)
 
     fields = ('condominium', 'name', 'description', 'is_active', 'payment_summary')
 
     def payment_summary(self, obj):
         data = get_fund_summary(obj)
-        
+
         if not data:
             return "No hay pagos registrados para este fondo."
-        
+
         html = "<h3>Aportes por Residencia</h3>"
         html += "<table style='width:100%; border-collapse: collapse;'>"
         html += "<tr><th style='border: 1px solid #ddd; padding: 8px;'>Residencia</th><th style='border: 1px solid #ddd; padding: 8px;'>Total Aportado</th></tr>"
@@ -67,8 +67,26 @@ class FundAdmin(admin.ModelAdmin):
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('get_identifier', 'get_owner', 'amount', 'get_condominium')
+
+    list_filter = ('fund__condominium',)
+
+    search_fields = ('residence__owner_name', 'residence__identifier')
+
     class Media:
         js = ('js/payment_filter.js',)
+
+    def get_identifier(self, obj):
+        return obj.residence.identifier
+    get_identifier.short_description = 'Identificador'
+
+    def get_owner(self, obj):
+        return obj.residence.owner_name
+    get_owner.short_description = 'Propietario'
+
+    def get_condominium(self, obj):
+        return obj.fund.condominium.name
+    get_condominium.short_description = 'Condominio'
 
 
 @admin.register(FundSummaryProxy)
