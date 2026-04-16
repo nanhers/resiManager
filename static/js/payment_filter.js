@@ -1,3 +1,4 @@
+@@ -0,0 +1,23 @@
 document.addEventListener("DOMContentLoaded", function () {
     const fundSelect = document.getElementById("id_fund");
     const residenceSelect = document.getElementById("id_residence");
@@ -21,3 +22,4 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     });
 });
+No newline at end of file

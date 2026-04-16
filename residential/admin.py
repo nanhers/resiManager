@@ -30,7 +30,7 @@ class ResidenceAdmin(admin.ModelAdmin):
 
     def get_condominium(self, obj):
         return obj.condominium.name
-    
+
     get_condominium.short_description = 'Condominio'
 
 @admin.register(Fund)
@@ -39,16 +39,16 @@ class FundAdmin(admin.ModelAdmin):
     list_filter = ('condominium', 'is_active')
     search_fields = ('name', 'description')
 
-    readonly_fields = ('payment_summary',)  
+    readonly_fields = ('payment_summary',)
 
     fields = ('condominium', 'name', 'description', 'is_active', 'payment_summary')
 
     def payment_summary(self, obj):
         data = get_fund_summary(obj)
-        
+
         if not data:
             return "No hay pagos registrados para este fondo."
-        
+
         html = "<h3>Aportes por Residencia</h3>"
         html += "<table style='width:100%; border-collapse: collapse;'>"
         html += "<tr><th style='border: 1px solid #ddd; padding: 8px;'>Residencia</th><th style='border: 1px solid #ddd; padding: 8px;'>Total Aportado</th></tr>"
