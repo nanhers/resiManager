@@ -1,5 +1,6 @@
 from urllib import response
 
+from django import forms
 from django.contrib import admin
 from .models import Condominium, Residence, Fund, Payment, FundSummaryProxy
 from residential import models
@@ -9,6 +10,35 @@ from .services.fund_service import get_fund_summary
 from django.template.response import TemplateResponse
 
 # Register your models here.
+class PaymentAdminForm(forms.ModelForm):
+    class Meta:
+        model = Payment
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+       
+        if self.instance and self.instance.pk and self.instance.fund_id:
+            fund = self.instance.fund
+            self.fields['residence'].queryset = Residence.objects.filter(
+                condominium=fund.condominium
+            )
+       
+        elif 'fund' in (self.data or {}):
+            try:
+                fund_id = int(self.data.get('fund'))
+                from .models import Fund
+                fund = Fund.objects.get(pk=fund_id)
+                self.fields['residence'].queryset = Residence.objects.filter(
+                    condominium=fund.condominium
+                )
+            except (ValueError, TypeError, Fund.DoesNotExist):
+                self.fields['residence'].queryset = Residence.objects.none()
+        else:
+            
+            self.fields['residence'].queryset = Residence.objects.none()
+            
 class ResidenceInline(admin.TabularInline):
     model = Residence
     extra = 1
@@ -67,6 +97,7 @@ class FundAdmin(admin.ModelAdmin):
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
+    form = PaymentAdminForm
     list_display = ('get_identifier', 'get_owner', 'amount', 'get_condominium')
 
     list_filter = ('fund__condominium',)

@@ -46,8 +46,13 @@ def get_residences_by_fund(request):
             condominium=fund.condominium
         )
 
-        data = list(residences.values("id", "identifier", "owner_name"))
-
+        data = [
+            {
+                'id': r.id,
+                'name': f"{r.identifier} - {r.owner_name}"
+            }
+            for r in residences
+        ]
         return JsonResponse(data, safe=False)
 
     except Fund.DoesNotExist:
