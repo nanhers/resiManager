@@ -5,6 +5,7 @@ from .models import Fund,Residence
 from .services.fund_service import get_fund_summary
 from datetime import datetime
 from django.http import JsonResponse
+from django.shortcuts import render
 
 
 def download_fund_pdf(request):
@@ -58,3 +59,8 @@ def get_residences_by_fund(request):
     except Fund.DoesNotExist:
         return JsonResponse([], safe=False)
 
+def landing(request):
+    context = {
+        "spots_left": 3
+    }
+    return render(request, "landing.html", context)

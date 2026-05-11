@@ -1,0 +1,283 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administración de Condominios</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f7f9fc;
+    color: #1a1a1a;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+.hero {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.hero h1 {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.hero p {
+    font-size: 18px;
+    color: #555;
+}
+
+.hero img {
+    width: 100%;
+    border-radius: 12px;
+    margin-top: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.badge {
+    display: inline-block;
+    background: #e6f4ea;
+    color: #2e7d32;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+.highlight {
+    text-align: center;
+    background: linear-gradient(135deg, #4CAF50, #2e7d32);
+    color: white;
+}
+
+.highlight h2 {
+    font-size: 26px;
+}
+
+.features li {
+    margin-bottom: 10px;
+}
+
+.team {
+    display: grid;
+    gap: 20px;
+}
+
+.member {
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.member a {
+    display: inline-block;
+    margin-top: 10px;
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.security {
+    background: #fff3cd;
+    border-left: 5px solid #ffc107;
+}
+
+.cta-text {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    background: white;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.whatsapp {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.whatsapp img {
+    animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+    100% { transform: scale(1); }
+}
+
+.cta-hint {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    font-size: 14px;
+    background: white;
+    padding: 8px 12px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: float 2s ease-in-out infinite;
+}
+
+/* Movimiento suave */
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+    100% { transform: translateY(0); }
+}
+
+@media (min-width: 768px) {
+    .hero h1 {
+        font-size: 40px;
+    }
+    .team {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+.features-grid {
+    display: grid;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.feature {
+    background: #f9fafc;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
+.feature h3 {
+    margin: 0 0 5px;
+    font-size: 16px;
+}
+
+.feature p {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+}
+
+@media (min-width: 768px) {
+    .features-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<section class="hero">
+    <div class="badge">Software para Administradores</div>
+    <h1>Transparencia total en las cuentas de tu condominio</h1>
+    <p>Genera reportes de pagos y estatus de fondos en segundos. Una herramienta diseñada para administradores que buscan generar confianza y profesionalismo sin complicaciones.</p>
+    <img src="{% static 'img/reporte.webp' %}" alt="Reporte">
+    <p><strong>Reportes claros y profesionales para tus vecinos</strong></p>
+</section>
+
+<section class="card highlight">
+    <h2>Solo quedan {{ spots_left }} lugares disponibles</h2>
+    <p>para nuestro programa piloto con soporte gratuito por 1 año.</p>
+</section>
+
+<section class="card">
+    <h2>Hacia una comunidad conectada: App para Condóminos</h2>
+    <p>Estamos evolucionando hacia una plataforma interactiva donde administradores y residentes podrán comunicarse y gestionar todo desde un solo lugar.</p>
+
+    <div class="features-grid">
+        <div class="feature">
+            <h3>📸 Carga de Comprobantes</h3>
+            <p>Los vecinos suben foto de su depósito o transferencia para validación del administrador.</p>
+        </div>
+
+        <div class="feature">
+            <h3>📩 Buzón Digital</h3>
+            <p>Reportes, quejas y sugerencias centralizadas (adiós al ruido en grupos de chat).</p>
+        </div>
+
+        <div class="feature">
+            <h3>🚗 Gestión de Estacionamientos</h3>
+            <p>Control y préstamo de cajones de manera organizada.</p>
+        </div>
+
+        <div class="feature">
+            <h3>📢 Tablero de Avisos</h3>
+            <p>Notificaciones oficiales al alcance de todos los residentes.</p>
+        </div>
+    </div>
+</section>
+
+<section class="card security">
+    <p><strong>Tu seguridad es nuestra prioridad.</strong> Nuestro sistema funciona exclusivamente para el <strong>registro y visualización de contribuciones.</strong> No solicitamos claves bancarias ni gestionamos dinero directamente; tú mantienes el control total de tus cuentas.</p>
+</section>
+
+<section class="card">
+    <h2>El equipo detrás del proyecto</h2>
+
+    <div class="team">
+
+        <div class="member">
+            <h3>Ing. José Luis Jiménez Castillo</h3>
+            <ul class="member-list">
+                <li><strong>Enfoque:</strong> Arquitectura de Sistemas y Desarrollo Backend.</li>
+                <li><strong>Experiencia:</strong> +10 años simplificando procesos digitales.</li>
+            </ul>
+            <a href="https://devcuber.github.io/" target="_blank">Ver perfil profesional</a>
+        </div>
+
+        <div class="member">
+            <h3>Ing. Nancy Maria Herrera Santos</h3>
+            <ul class="member-list">
+                <li><strong>Enfoque:</strong> Optimización de Procesos, Desarrollo FullStack y Experiencia de Usuario.</li>
+                <li><strong>Experiencia:</strong> +10 años especialista en soluciones tecnológicas para la gestión administrativa.</li>
+            </ul>
+            <a href="https://nanhers.github.io/nancy-landing-page/" target="_blank">Ver perfil profesional</a>
+        </div>
+
+    </div>
+
+    <p style="margin-top:15px; font-size:14px; color:#555;">
+        Explora nuestros perfiles para validar la experiencia técnica detrás de la solución.
+    </p>
+</section>
+
+</div>
+
+<p class="cta-hint">
+Solo quedan {{ spots_left }} lugares. <br>
+Escríbenos por WhatsApp ⬇️ 
+</p>
+
+<a href="https://wa.me/529622423505?text=Hola%20estoy%20interesado%20en%20el%20software%20para%20administraci%C3%B3n%20de%20condominios%20y%20me%20gustar%C3%ADa%20participar%20en%20el%20programa%20piloto" 
+class="whatsapp" target="_blank">
+<img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" width="40">
+</a>
+
+</body>
+</html>
