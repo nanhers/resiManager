@@ -77,3 +77,42 @@ class FundSummaryProxy(Fund):
         proxy = True
         verbose_name = "Resumen de aportes"
         verbose_name_plural = "Resumen de aportes"
+
+class Disbursement(models.Model):
+    fund = models.ForeignKey(Fund, on_delete=models.CASCADE, related_name='disbursements', verbose_name="Fondo")
+    amount = models.DecimalField("Monto", max_digits=10, decimal_places=2)
+    description = models.TextField("Descripción")
+    created_at = models.DateTimeField("Fecha de Desembolso", auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Desembolso"
+        verbose_name_plural = "Desembolsos"
+        ordering = ['-created_at']
+    
+    def clean(self):
+        if self.amount is not None and self.amount <= 0:
+            raise ValidationError({"amount": "La cantidad debe ser un valor positivo."})
+    
+        if self.fund_id and self.amount is not None:
+            from django.db.models import Sum
+
+            total_pagos = self.fund.payments.aggregate(total=Sum('amount'))['total'] or 0
+        
+        
+            total_desembolsos = self.fund.disbursements.exclude(pk=self.pk).aggregate(total=Sum('amount'))['total'] or 0
+        
+            saldo = total_pagos - total_desembolsos
+
+            if self.amount > saldo:
+                raise ValidationError({
+                    "amount": f"El monto excede el saldo disponible del fondo. Saldo actual: ${saldo:.2f}"
+                })
+        
+    def save(self, *args, **kwargs):
+        if self.amount is not None:
+            self.amount = abs(self.amount)
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Desembolso de {self.amount} del fondo {self.fund.name}"

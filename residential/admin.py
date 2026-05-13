@@ -2,7 +2,7 @@ from urllib import response
 
 from django import forms
 from django.contrib import admin
-from .models import Condominium, Residence, Fund, Payment, FundSummaryProxy
+from .models import Condominium, Residence, Fund, Payment, FundSummaryProxy, Disbursement
 from residential import models
 from django.db.models import Sum
 from django.utils.html import format_html
@@ -154,3 +154,16 @@ class FundSummaryAdmin(admin.ModelAdmin):
         }
 
         return TemplateResponse(request, "admin/fund_summary_list.html", context)
+
+@admin.register(Disbursement)
+class DisbursementAdmin(admin.ModelAdmin):
+    list_display = ('fund', 'get_condominium', 'amount', 'description', 'created_at')
+    list_filter = ('fund__condominium', 'fund')
+    search_fields = ('description', 'fund__name')
+    readonly_fields = ('created_at',)
+    def get_condominium(self, obj):
+        return obj.fund.condominium.name
+    get_condominium.short_description = 'Condominio' 
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('fund__condominium')
