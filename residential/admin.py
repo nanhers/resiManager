@@ -74,24 +74,17 @@ class FundAdmin(admin.ModelAdmin):
     fields = ('condominium', 'name', 'description', 'is_active', 'payment_summary')
 
     def payment_summary(self, obj):
-        data = get_fund_summary(obj)
+        total_aportes = obj.payments.aggregate(total=Sum('amount'))['total'] or 0
+        total_desembolsos = obj.disbursements.aggregate(total=Sum('amount'))['total'] or 0
+        saldo = total_aportes - total_desembolsos
+        color = "red" if saldo < 0 else "green"
 
-        if not data:
-            return "No hay pagos registrados para este fondo."
-
-        html = "<h3>Aportes por Residencia</h3>"
-        html += "<table style='width:100%; border-collapse: collapse;'>"
-        html += "<tr><th style='border: 1px solid #ddd; padding: 8px;'>Residencia</th><th style='border: 1px solid #ddd; padding: 8px;'>Total Aportado</th></tr>"
-
-        total_amount = 0
-
-        for item in data:
-            total_amount += item['total']
-            html += f"<tr><td style='border: 1px solid #ddd; padding: 8px;'>{item['residence__identifier']}</td><td style='border: 1px solid #ddd; padding: 8px;'>${item['total']:.2f}</td></tr>"
-
-        html += f"<tr><td style='border: 1px solid #ddd; padding: 8px; font-weight: bold;'>Total General</td><td style='border: 1px solid #ddd; padding: 8px; font-weight: bold;'>${total_amount:.2f}</td></tr>"
+        html = "<table style='width:100%; border-collapse: collapse;'>"
+        html += f"<tr><td style='border: 1px solid #ddd; padding: 8px;'>Total Aportes</td><td style='border: 1px solid #ddd; padding: 8px;'>${total_aportes:,.2f}</td></tr>"
+        html += f"<tr><td style='border: 1px solid #ddd; padding: 8px;'>Total Desembolsos</td><td style='border: 1px solid #ddd; padding: 8px;'>${total_desembolsos:,.2f}</td></tr>"
+        html += f"<tr><td style='border: 1px solid #ddd; padding: 8px; font-weight:bold;'>Saldo Disponible</td><td style='border: 1px solid #ddd; padding: 8px; font-weight:bold; color:{color};'>${saldo:,.2f}</td></tr>"
         html += "</table>"
-
+        
         return format_html(html)
     payment_summary.short_description = 'Resumen de Pagos'
 
@@ -143,6 +136,8 @@ class FundSummaryAdmin(admin.ModelAdmin):
             summary = get_fund_summary(fund)
             total_general = sum(item['total'] for item in summary)
 
+            
+
         context = {
             **self.admin_site.each_context(request),
             "condominiums": condominiums,
@@ -152,6 +147,8 @@ class FundSummaryAdmin(admin.ModelAdmin):
             "summary": summary,
             "total_general": total_general,
         }
+
+        
 
         return TemplateResponse(request, "admin/fund_summary_list.html", context)
 
