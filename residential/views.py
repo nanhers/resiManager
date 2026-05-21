@@ -6,6 +6,7 @@ from .services.fund_service import get_fund_summary
 from datetime import datetime
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.db.models import Sum
 
 
 def download_fund_pdf(request):
@@ -17,13 +18,18 @@ def download_fund_pdf(request):
     fund = Fund.objects.get(id=fund_id)
     summary = get_fund_summary(fund)
 
-    total_general = sum(item['total'] for item in summary)
+    total_aportes = sum(item['total'] for item in summary)
+    total_desembolsos = fund.disbursements.aggregate(total=Sum('amount'))['total'] or 0
+    saldo_disponible = total_aportes - total_desembolsos
 
     html = render_to_string("pdf/fund_report.html", {
         "fund": fund,
         "condominium": fund.condominium,
         "summary": summary,
-        "total_general": total_general,
+        "total_aportes": total_aportes,
+        "total_desembolsos": total_desembolsos,
+        "saldo_disponible": saldo_disponible,   
+        "disbursements": fund.disbursements.all().order_by('-created_at'),
         "generated_at": datetime.now(),
     })
 

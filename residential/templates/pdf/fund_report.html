@@ -68,8 +68,7 @@
         <div class="subtitle">Condominio {{ condominium.name }}</div>
     </div>
 
-
-
+    <h2 style="margin-top:30px;">Aportes por Residencia</h2>
     <table>
         <thead>
             <tr>
@@ -88,10 +87,54 @@
             {% endfor %}
 
             <tr class="total-row">
-                <td colspan="2">Total General</td>
-                <td class="amount">$ {{ total_general }}</td>
+                <td colspan="2">Total Aportes</td>
+                <td class="amount">$ {{ total_aportes }}</td>
             </tr>
         </tbody>
+    </table>
+
+    <h2 style="margin-top:30px;">Desembolsos</h2>
+    {% if disbursements %}
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Descripción</th>
+                <th>Monto</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in disbursements %}
+            <tr>
+                <td>{{ d.created_at|date:"d/m/Y" }}</td>
+                <td>{{ d.description }}</td>
+                <td class="amount">$ {{ d.amount }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="total-row">
+                <td colspan="2">Total Desembolsos</td>
+                <td class="amount">$ {{ total_desembolsos }}</td>
+            </tr>
+        </tbody>
+    </table>
+    {% else %}
+    <p>No hay desembolsos registrados para este fondo.</p>
+    {% endif %} 
+
+    <h2 style="margin-top:30px;">Resumen del Fondo</h2>
+    <table style="margin-top: 20px;">
+        <tr class="total-row">
+            <td>Total Aportes</td>
+            <td class="amount">$ {{ total_aportes }}</td>
+        </tr>
+        <tr class="total-row">
+            <td>Total Desembolsos</td>
+            <td class="amount">$ {{ total_desembolsos }}</td>
+        </tr>
+            <tr class="total-row">
+            <td>Saldo Disponible</td>
+            <td class="amount">$ {{ saldo_disponible }}</td>
+        </tr>
     </table>
 
 

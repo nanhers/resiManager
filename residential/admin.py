@@ -129,12 +129,19 @@ class FundSummaryAdmin(admin.ModelAdmin):
         funds = Fund.objects.filter(condominium_id=selected_condo) if selected_condo else []
 
         summary = []
-        total_general = 0
+        total_aportes = 0
+        total_desembolsos = 0
+        saldo_disponible = 0
+        disbursements = []
+    
 
         if selected_condo and selected_fund:
             fund = Fund.objects.get(id=selected_fund)
             summary = get_fund_summary(fund)
-            total_general = sum(item['total'] for item in summary)
+            total_aportes = sum(item['total'] for item in summary)
+            total_desembolsos = fund.disbursements.aggregate(total=Sum('amount'))['total'] or 0
+            saldo_disponible = total_aportes - total_desembolsos
+            disbursements = fund.disbursements.all().order_by('-created_at')
 
             
 
@@ -145,7 +152,10 @@ class FundSummaryAdmin(admin.ModelAdmin):
             "selected_condo": selected_condo,
             "selected_fund": selected_fund,
             "summary": summary,
-            "total_general": total_general,
+            "total_aportes": total_aportes,
+            "total_desembolsos": total_desembolsos,
+            "saldo_disponible": saldo_disponible,   
+            "disbursements": disbursements,
         }
 
         
