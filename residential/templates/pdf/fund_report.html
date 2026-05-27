@@ -63,12 +63,11 @@
 
 
     <div class="header">
-        <div class="title">Resumen de Aportes</div>
-        <div class="subtitle">{{ fund.name }}</div>
-        <div class="subtitle">Condominio {{ condominium.name }}</div>
+        <div class="title">Resumen de Aportes - Periodo: {{ selected_month }} {{ selected_year }}</div>
+        <div class="subtitle">Condominio {{ condominium.name }} · {{ fund.name }} </div>
     </div>
 
-    <h2 style="margin-top:30px;">Aportes por Residencia</h2>
+    <h2 style="margin-top:30px;">Aportes — {{ selected_month }} {{ selected_year }}</h2>
     <table>
         <thead>
             <tr>
@@ -87,13 +86,13 @@
             {% endfor %}
 
             <tr class="total-row">
-                <td colspan="2">Total Aportes</td>
+                <td colspan="2">Total Aportes del Mes</td>
                 <td class="amount">$ {{ total_aportes }}</td>
             </tr>
         </tbody>
     </table>
 
-    <h2 style="margin-top:30px;">Desembolsos</h2>
+    <h2 style="margin-top:30px;">Desembolsos — {{ selected_month }} {{ selected_year }}</h2>
     {% if disbursements %}
     <table>
         <thead>
@@ -112,7 +111,7 @@
             </tr>
             {% endfor %}
             <tr class="total-row">
-                <td colspan="2">Total Desembolsos</td>
+                <td colspan="2">Total Desembolsos del Mes</td>
                 <td class="amount">$ {{ total_desembolsos }}</td>
             </tr>
         </tbody>
@@ -124,15 +123,15 @@
     <h2 style="margin-top:30px;">Resumen del Fondo</h2>
     <table style="margin-top: 20px;">
         <tr class="total-row">
-            <td>Total Aportes</td>
+            <td>Total Aportes del Mes</td>
             <td class="amount">$ {{ total_aportes }}</td>
         </tr>
         <tr class="total-row">
-            <td>Total Desembolsos</td>
+            <td>Total Desembolsos del Mes</td>
             <td class="amount">$ {{ total_desembolsos }}</td>
         </tr>
-            <tr class="total-row">
-            <td>Saldo Disponible</td>
+        <tr class="total-row">
+            <td>{{ saldo_label }}</td>
             <td class="amount">$ {{ saldo_disponible }}</td>
         </tr>
     </table>

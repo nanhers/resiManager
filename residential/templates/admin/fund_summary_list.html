@@ -13,37 +13,47 @@
 
             <div class="form-row">
                 <div>
-                    <label>Condominio:</label>
-                    <select name="condominium" class="vForeignKeyRawIdAdminField" onchange="this.form.submit()">
-                        <option value="">Seleccione...</option>
-                        {% for c in condominiums %}
-                            <option value="{{ c.id }}" {% if c.id|stringformat:"s" == selected_condo %}selected{% endif %}>
-                                {{ c.name }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div>
                     <label>Fondo:</label>
                     <select name="fund" class="vForeignKeyRawIdAdminField" onchange="this.form.submit()">
                         <option value="">Seleccione...</option>
-                        {% for f in funds %}
+                        {% for f in all_funds  %}
                             <option value="{{ f.id }}" {% if f.id|stringformat:"s" == selected_fund %}selected{% endif %}>
-                                {{ f.name }}
+                                {{f.condominium.name }} - {{ f.name }}
                             </option>
                         {% endfor %}
                     </select>
-                    {% if selected_fund %}
-                        <a href="{% url 'fund_report_pdf' %}?fund={{ selected_fund }}" 
-                        class="button" 
-                        style="margin-top:10px; display:inline-block;">
-                            📄 Descargar PDF
-                        </a>
-                    {% endif %}
                 </div>
+                <div style="margin-left: 1rem;">
+                    <label>Año:</label>
+                    <select name="year" class="vForeignKeyRawIdAdminField" onchange="this.form.submit()">
+                        <option value="">Seleccione...</option>
+                        {% for y in available_years  %}
+                            <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>{{ y }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="margin-left: 1rem;">
+                    <label>Mes:</label>
+                    <select name="month" class="vForeignKeyRawIdAdminField" onchange="this.form.submit()">
+                        <option value="">Seleccione...</option>
+                        {% for num, name in available_months %}
+                            <option value="{{ num }}" {% if num == selected_month %}selected{% endif %}>{{ name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="margin-left: 1rem; align-self: flex-end;">
+                    <button type="submit" class="button" style="margin-top:10px; display:inline-block;">
+                        🔍 Filtrar
+                    </button>
+                </div>
+                    {% if selected_fund %}
+                    <a href="{% url 'fund_report_pdf' %}?fund={{ selected_fund }}&year={{ selected_year }}&month={{ selected_month }}" class="button" style="margin-left:1rem;">
+                        📄 Descargar PDF
+                    </a>
+                    {% endif %}
+                
             </div>
 
         </form>
@@ -52,7 +62,9 @@
     <!-- 🔹 RESULTADO -->
     {% if summary %}
     <div class="module">
-        <h2>Aportes por Residencia</h2>
+        <h2>Aportes — 
+    {% for num, name in available_months %}{% if selected_month == num %}{{ name }}{% endif %}{% endfor %}
+    {{ selected_year }}</h2>
         <table class="adminlist" style="width:100%; table-layout: fixed;">
             <thead>
                 <tr>
@@ -73,7 +85,7 @@
                 {% endfor %}
             </tbody>
             <tr style="font-weight:bold; border-top:2px solid #ddd;">
-                <td colspan="2" style="text-align:right;">Total Aportes:</td>
+                <td colspan="2" style="text-align:right;">Total Aportes del Mes:</td>
                 <td style="text-align:right;">$ {{ total_aportes|floatformat:2|intcomma }}</td>
             </tr>
         </table>
@@ -101,7 +113,7 @@
                 {% endfor %}
             </tbody>
             <tr style="font-weight:bold; border-top:2px solid #ddd;">
-                <td colspan="2" style="text-align:right;">Total Desembolsos:</td>
+                <td colspan="2" style="text-align:right;">Total Desembolsos del Mes:</td>
                 <td style="text-align:right;">$ {{ total_desembolsos|floatformat:2|intcomma }}</td>
             </tr>
         </table>
@@ -122,11 +134,11 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Total Aportes</td>
+                    <td>Total Aportes del Mes</td>
                     <td style="text-align:right;">$ {{ total_aportes|floatformat:2|intcomma }}</td>
                 </tr>
                 <tr>
-                    <td>Total Desembolsos</td>
+                    <td>Total Desembolsos del Mes</td>
                     <td style="text-align:right;">$ {{ total_desembolsos|floatformat:2|intcomma }}</td>
                 </tr>
             </tbody>
