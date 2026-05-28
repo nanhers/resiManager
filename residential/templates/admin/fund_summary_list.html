@@ -7,18 +7,17 @@
 
     <h1>Resumen de Aportes</h1>
 
-    <!-- 🔹 FILTROS -->
+    <!-- FILTROS -->
     <div class="module aligned">
         <form method="get">
-
             <div class="form-row">
                 <div>
                     <label>Fondo:</label>
                     <select name="fund" class="vForeignKeyRawIdAdminField" onchange="this.form.submit()">
                         <option value="">Seleccione...</option>
-                        {% for f in all_funds  %}
+                        {% for f in all_funds %}
                             <option value="{{ f.id }}" {% if f.id|stringformat:"s" == selected_fund %}selected{% endif %}>
-                                {{f.condominium.name }} - {{ f.name }}
+                                {{ f.condominium.name }} - {{ f.name }}
                             </option>
                         {% endfor %}
                     </select>
@@ -27,9 +26,8 @@
                     <label>Año:</label>
                     <select name="year" class="vForeignKeyRawIdAdminField" onchange="this.form.submit()">
                         <option value="">Seleccione...</option>
-                        {% for y in available_years  %}
-                            <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>{{ y }}
-                            </option>
+                        {% for y in available_years %}
+                            <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>{{ y }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -38,8 +36,7 @@
                     <select name="month" class="vForeignKeyRawIdAdminField" onchange="this.form.submit()">
                         <option value="">Seleccione...</option>
                         {% for num, name in available_months %}
-                            <option value="{{ num }}" {% if num == selected_month %}selected{% endif %}>{{ name }}
-                            </option>
+                            <option value="{{ num }}" {% if num == selected_month %}selected{% endif %}>{{ name }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -48,23 +45,23 @@
                         🔍 Filtrar
                     </button>
                 </div>
-                    {% if selected_fund %}
-                    <a href="{% url 'fund_report_pdf' %}?fund={{ selected_fund }}&year={{ selected_year }}&month={{ selected_month }}" class="button" style="margin-left:1rem;">
-                        📄 Descargar PDF
-                    </a>
-                    {% endif %}
-                
+                {% if selected_fund %}
+                <a href="{% url 'fund_report_pdf' %}?fund={{ selected_fund }}&year={{ selected_year }}&month={{ selected_month }}"
+                   class="button" style="margin-left:1rem;">
+                    📄 Descargar PDF
+                </a>
+                {% endif %}
             </div>
-
         </form>
     </div>
 
-    <!-- 🔹 RESULTADO -->
+    <!-- APORTES -->
     {% if summary %}
     <div class="module">
-        <h2>Aportes — 
-    {% for num, name in available_months %}{% if selected_month == num %}{{ name }}{% endif %}{% endfor %}
-    {{ selected_year }}</h2>
+        <h2>Aportes —
+            {% for num, name in available_months %}{% if selected_month == num %}{{ name }}{% endif %}{% endfor %}
+            {{ selected_year }}
+        </h2>
         <table class="adminlist" style="width:100%; table-layout: fixed;">
             <thead>
                 <tr>
@@ -90,8 +87,10 @@
             </tr>
         </table>
     </div>
+    {% endif %}
 
-    <!-- 🔹 DESEMBOLSOS -->
+    <!-- DESEMBOLSOS Y RESUMEN -->
+    {% if selected_fund %}
     <div class="module" style="margin-top: 20px;">
         <h2>Desembolsos</h2>
         {% if disbursements %}
@@ -118,11 +117,10 @@
             </tr>
         </table>
         {% else %}
-        <p>No hay desembolsos registrados para este fondo.</p>
+        <p>No hay desembolsos registrados para este periodo.</p>
         {% endif %}
     </div>
 
-    <!-- 🔹 RESUMEN DEL FONDO -->
     <div class="module" style="margin-top: 20px;">
         <h2>Resumen del Fondo</h2>
         <table class="adminlist" style="width:100%; table-layout: fixed;">
@@ -143,12 +141,11 @@
                 </tr>
             </tbody>
             <tr style="font-weight:bold; border-top:2px solid #ddd;">
-                <td>Saldo Disponible</td>
+                <td>{{ saldo_label }}</td>
                 <td style="text-align:right;">$ {{ saldo_disponible|floatformat:2|intcomma }}</td>
             </tr>
         </table>
     </div>
-
     {% endif %}
 
 </div>
