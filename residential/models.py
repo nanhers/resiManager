@@ -58,7 +58,7 @@ class Payment(models.Model):
     residence = models.ForeignKey(Residence, on_delete=models.CASCADE)
     amount = models.DecimalField("Monto", max_digits=10, decimal_places=2)
     payment_date = models.DateTimeField("Fecha de Pago", auto_now_add=True)
-    note = models.TextField("Nota", blank=True, null=True)
+    note = models.TextField("Nota")
 
     class Meta:
         verbose_name = "Pago"
