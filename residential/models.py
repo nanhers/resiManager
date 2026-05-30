@@ -68,6 +68,8 @@ class Payment(models.Model):
     def clean(self):
         if not self.residence_id or not self.fund_id:
             return
+        if  self.amount == 0:
+            raise ValidationError({"amount": "El monto debe ser un valor diferente de cero."})
         if self.residence.condominium != self.fund.condominium:
             raise ValidationError("La residencia y el fondo deben pertenecer al mismo condominio.")
     
