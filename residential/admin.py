@@ -28,7 +28,6 @@ class PaymentAdminForm(forms.ModelForm):
         elif 'fund' in (self.data or {}):
             try:
                 fund_id = int(self.data.get('fund'))
-                from .models import Fund
                 fund = Fund.objects.get(pk=fund_id)
                 self.fields['residence'].queryset = Residence.objects.filter(
                     condominium=fund.condominium
@@ -100,11 +99,19 @@ class PaymentAdmin(admin.ModelAdmin):
         js = ('js/payment_filter.js',)
 
     def get_identifier(self, obj):
-        return obj.residence.identifier
+        try:
+            return obj.residence.identifier
+        except Residence.DoesNotExist:
+            return "N/A"
+        
     get_identifier.short_description = 'Identificador'
 
     def get_owner(self, obj):
-        return obj.residence.owner_name
+        try:
+            return obj.residence.owner_name
+        except Residence.DoesNotExist:
+            return "N/A"        
+        
     get_owner.short_description = 'Propietario'
 
     def get_condominium(self, obj):

@@ -66,9 +66,11 @@ class Payment(models.Model):
         ordering = ['-payment_date']
        
     def clean(self):
+        if not self.residence_id or not self.fund_id:
+            return
         if self.residence.condominium != self.fund.condominium:
             raise ValidationError("La residencia y el fondo deben pertenecer al mismo condominio.")
-
+    
     def __str__(self):
         return f"Pago de {self.amount} por {self.residence.identifier} al fondo {self.fund.name}"
 
