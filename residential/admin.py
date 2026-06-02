@@ -43,12 +43,17 @@ class ResidenceInline(admin.TabularInline):
 
 @admin.register(Condominium)
 class CondominiumAdmin(admin.ModelAdmin):
-    list_display = ('name', 'city', 'state', 'total_residences')
+    list_display = ('name', 'city', 'state', 'total_residences', 'created_by')
     inlines = [ResidenceInline]
 
     def total_residences(self, obj):
         return obj.residences.count()
     total_residences.short_description = 'Total Residencias'
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.created_by = request.user
+        super().save_model(request, obj, form, change)
 
 @admin.register(Residence)
 class ResidenceAdmin(admin.ModelAdmin):

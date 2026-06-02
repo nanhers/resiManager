@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator
-
+from django.contrib.auth.models import User
 
 class Condominium(models.Model):
     name = models.CharField("Nombre",max_length=50, validators=[MinLengthValidator(3)])
@@ -10,6 +10,7 @@ class Condominium(models.Model):
     state = models.CharField("Estado",max_length=100, blank=True, null=True)
     address = models.CharField("Dirección",max_length=250, validators=[MinLengthValidator(5)])
     zip_code = models.CharField("Código Postal",max_length=20, blank=True, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Creado por", editable=False)
 
     class Meta:
         verbose_name = "Condominio"
